@@ -5,7 +5,9 @@ import android.view.Display
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,13 +20,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.painterResource
@@ -40,12 +49,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AthleteGalleryTheme {
+            AthleteGalleryTheme(darkTheme = false) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     DisplayLayout(
                         modifier = Modifier
                             .padding(innerPadding)
-                            .fillMaxSize().verticalScroll(rememberScrollState())
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
                     )
                 }
             }
@@ -55,12 +65,19 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun DisplayImage() {
-    Column(modifier = Modifier.padding(bottom = 40.dp)) {
+    Column(
+        modifier = Modifier
+            .padding(bottom = 12.dp)
+            .shadow(2.dp)
+    ) {
         Image(
-            painter = painterResource(R.drawable.messi),
+            painter = painterResource(R.drawable.leo),
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.width(230.dp).height(290.dp)
+            modifier = Modifier
+                .width(230.dp)
+                .height(290.dp)
+                .padding(20.dp)
         )
     }
 }
@@ -74,19 +91,19 @@ fun DisplayInformation(modifier: Modifier) {
     ) {
         Text(
             text = "Leonel Messi",
-            fontSize = 15.sp,
-            textAlign = TextAlign.Center
+            fontSize = 15.sp
         )
         Text(
             text = "38 years old",
-            fontSize = 13.sp,
-            textAlign = TextAlign.Center
+            fontSize = 13.sp
         )
     }
 }
 
 @Composable
 fun DisplayLayout(modifier: Modifier) {
+    var currentImage by remember { mutableStateOf(1) }
+    
     Column(
         modifier, horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -99,7 +116,7 @@ fun DisplayLayout(modifier: Modifier) {
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             Button(
-                onClick = {},
+                onClick = {currentImage ++},
                 contentPadding = PaddingValues(horizontal = 40.dp)
             ) { Text(text = "Previous") }
             Button(
